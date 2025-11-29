@@ -63,11 +63,13 @@ const UserInfo = ({ onClose }) => {
               {[...Array(12)].map((_, index) => (
                 <div key={index} className="grid-item">
                   <div className="grid-thumbnail">
-                    <div 
-                      className="thumbnail-placeholder"
-                      style={{ backgroundImage: `url(${thumbnailImages[index]})` }}
-                    >
-                    </div>
+                    <img 
+                      src={thumbnailImages[index]} 
+                      alt={`Video ${index + 1}`}
+                      className="thumbnail-image"
+                      loading="lazy"
+                      decoding="async"
+                    />
                     <div className="view-count">
                       <span className="material-icons">visibility</span> {formatNumber(Math.floor(Math.random() * 500000) + 10000)}
                     </div>
