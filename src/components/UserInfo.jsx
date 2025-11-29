@@ -1,21 +1,28 @@
 import { useState } from 'react';
 import './UserInfo.css';
 
+// Import thumbnail images
+import thumb1 from '../assets/images/Rectangle.png';
+import thumb2 from '../assets/images/Rectangle-1.png';
+import thumb3 from '../assets/images/Rectangle-2.png';
+import thumb4 from '../assets/images/Rectangle-3.png';
+import thumb5 from '../assets/images/Rectangle-4.png';
+import thumb6 from '../assets/images/Rectangle-5.png';
+import thumb7 from '../assets/images/Rectangle-6.png';
+import thumb8 from '../assets/images/Rectangle-7.png';
+import thumb9 from '../assets/images/Rectangle-8.png';
+import thumb10 from '../assets/images/Rectangle-9.png';
+import thumb11 from '../assets/images/Rectangle-10.png';
+import thumb12 from '../assets/images/Rectangle-11.png';
+
 const UserInfo = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState('videos');
-
-  const userStats = {
-    username: 'creative_mind',
-    fullName: 'Creative Creator',
-    avatar: 'https://i.pravatar.cc/150?img=12',
-    bio: 'Feeling blessed ✨',
-    followers: 125400,
-    following: 892,
-    likes: 2340000,
-    totalViews: 5600000,
-    videos: 45
-  };
-
+  
+  const thumbnailImages = [
+    thumb1, thumb2, thumb3, thumb4, thumb5, thumb6,
+    thumb7, thumb8, thumb9, thumb10, thumb11, thumb12
+  ];
+  
   const formatNumber = (num) => {
     if (num >= 1000000) {
       return (num / 1000000).toFixed(1) + 'M';
@@ -32,44 +39,6 @@ const UserInfo = ({ onClose }) => {
         <button className="close-btn" onClick={onClose}>
           <span className="material-icons">close</span>
         </button>
-
-        {/* Profile Header */}
-        {/* <div className="profile-header">
-          <div className="profile-avatar">
-            <img src={userStats.avatar} alt={userStats.username} />
-          </div>
-          <h2 className="profile-username">@{userStats.username}</h2>
-          <p className="profile-fullname">{userStats.fullName}</p>
-        </div> */}
-
-        {/* Stats Row */}
-        {/* <div className="stats-row">
-          <div className="stat-item">
-            <div className="stat-number">{formatNumber(userStats.following)}</div>
-            <div className="stat-label">Following</div>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat-item">
-            <div className="stat-number">{formatNumber(userStats.followers)}</div>
-            <div className="stat-label">Followers</div>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat-item">
-            <div className="stat-number">{formatNumber(userStats.likes)}</div>
-            <div className="stat-label">Likes</div>
-          </div>
-        </div> */}
-
-        {/* Action Buttons */}
-        {/* <div className="action-buttons-row">
-          <button className="action-btn primary">Edit Profile</button>
-          <button className="action-btn secondary">Refer to a friend</button>
-        </div> */}
-
-        {/* Bio */}
-        {/* <div className="bio-section">
-          <p className="bio-text">{userStats.bio}</p>
-        </div> */}
 
         {/* Tabs */}
         <div className="tabs-container">
@@ -94,8 +63,10 @@ const UserInfo = ({ onClose }) => {
               {[...Array(12)].map((_, index) => (
                 <div key={index} className="grid-item">
                   <div className="grid-thumbnail">
-                    <div className="thumbnail-placeholder">
-                      <span className="material-icons">play_circle_outline</span>
+                    <div 
+                      className="thumbnail-placeholder"
+                      style={{ backgroundImage: `url(${thumbnailImages[index]})` }}
+                    >
                     </div>
                     <div className="view-count">
                       <span className="material-icons">visibility</span> {formatNumber(Math.floor(Math.random() * 500000) + 10000)}
