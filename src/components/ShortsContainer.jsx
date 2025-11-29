@@ -7,6 +7,7 @@ const ShortsContainer = ({ videos }) => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [containerHeight, setContainerHeight] = useState(0);
   const containerRef = useRef(null);
 
   const minSwipeDistance = 50;
@@ -42,6 +43,24 @@ const ShortsContainer = ({ videos }) => {
     setCurrentIndex(index);
     setTimeout(() => setIsTransitioning(false), 300);
   };
+
+  // Update container height on mount and resize
+  useEffect(() => {
+    const updateHeight = () => {
+      if (containerRef.current) {
+        setContainerHeight(containerRef.current.clientHeight);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    window.addEventListener('orientationchange', updateHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('orientationchange', updateHeight);
+    };
+  }, []);
 
   // Keyboard navigation for desktop testing
   useEffect(() => {
@@ -80,7 +99,7 @@ const ShortsContainer = ({ videos }) => {
       <div 
         className="shorts-wrapper"
         style={{
-          transform: `translateY(-${currentIndex * 100}vh)`,
+          transform: `translateY(-${currentIndex * (containerHeight || window.innerHeight)}px)`,
           transition: 'transform 0.3s ease-out'
         }}
       >
