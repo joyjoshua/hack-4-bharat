@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { FaUser, FaVideo, FaHeart, FaEye, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import './UserInfo.css';
 
 const UserInfo = ({ onClose }) => {
@@ -9,7 +8,7 @@ const UserInfo = ({ onClose }) => {
     username: 'creative_mind',
     fullName: 'Creative Creator',
     avatar: 'https://i.pravatar.cc/150?img=12',
-    bio: 'Creating amazing content every day ✨\nFollow for more inspiration!',
+    bio: 'Feeling blessed ✨',
     followers: 125400,
     following: 892,
     likes: 2340000,
@@ -30,19 +29,21 @@ const UserInfo = ({ onClose }) => {
     <div className="user-info-container">
       <div className="user-info-wrapper">
         {/* Close Button */}
-        <button className="close-btn" onClick={onClose}>✕</button>
+        <button className="close-btn" onClick={onClose}>
+          <span className="material-icons">close</span>
+        </button>
 
         {/* Profile Header */}
-        <div className="profile-header">
+        {/* <div className="profile-header">
           <div className="profile-avatar">
             <img src={userStats.avatar} alt={userStats.username} />
           </div>
           <h2 className="profile-username">@{userStats.username}</h2>
           <p className="profile-fullname">{userStats.fullName}</p>
-        </div>
+        </div> */}
 
         {/* Stats Row */}
-        <div className="stats-row">
+        {/* <div className="stats-row">
           <div className="stat-item">
             <div className="stat-number">{formatNumber(userStats.following)}</div>
             <div className="stat-label">Following</div>
@@ -57,18 +58,18 @@ const UserInfo = ({ onClose }) => {
             <div className="stat-number">{formatNumber(userStats.likes)}</div>
             <div className="stat-label">Likes</div>
           </div>
-        </div>
+        </div> */}
 
         {/* Action Buttons */}
-        <div className="action-buttons-row">
+        {/* <div className="action-buttons-row">
           <button className="action-btn primary">Edit Profile</button>
-          <button className="action-btn secondary">Share Profile</button>
-        </div>
+          <button className="action-btn secondary">Refer to a friend</button>
+        </div> */}
 
         {/* Bio */}
-        <div className="bio-section">
+        {/* <div className="bio-section">
           <p className="bio-text">{userStats.bio}</p>
-        </div>
+        </div> */}
 
         {/* Tabs */}
         <div className="tabs-container">
@@ -76,13 +77,13 @@ const UserInfo = ({ onClose }) => {
             className={`tab-btn ${activeTab === 'videos' ? 'active' : ''}`}
             onClick={() => setActiveTab('videos')}
           >
-            <FaVideo /> Videos
+            <span className="material-icons">video_library</span> Videos
           </button>
           <button 
             className={`tab-btn ${activeTab === 'liked' ? 'active' : ''}`}
             onClick={() => setActiveTab('liked')}
           >
-            <FaHeart /> Liked
+            <span className="material-icons">favorite</span> Liked
           </button>
         </div>
 
@@ -94,10 +95,10 @@ const UserInfo = ({ onClose }) => {
                 <div key={index} className="grid-item">
                   <div className="grid-thumbnail">
                     <div className="thumbnail-placeholder">
-                      <FaVideo />
+                      <span className="material-icons">play_circle_outline</span>
                     </div>
                     <div className="view-count">
-                      <FaEye /> {formatNumber(Math.floor(Math.random() * 500000) + 10000)}
+                      <span className="material-icons">visibility</span> {formatNumber(Math.floor(Math.random() * 500000) + 10000)}
                     </div>
                   </div>
                 </div>
@@ -106,7 +107,7 @@ const UserInfo = ({ onClose }) => {
           )}
           {activeTab === 'liked' && (
             <div className="empty-state">
-              <FaHeart className="empty-icon" />
+              <span className="material-icons empty-icon">favorite_border</span>
               <p>Your liked videos will appear here</p>
             </div>
           )}
@@ -115,10 +116,10 @@ const UserInfo = ({ onClose }) => {
         {/* Settings Footer */}
         <div className="settings-footer">
           <button className="footer-btn">
-            <FaCog /> Settings
+            <span className="material-icons">settings</span> Settings
           </button>
           <button className="footer-btn">
-            <FaSignOutAlt /> Logout
+            <span className="material-icons">logout</span> Logout
           </button>
         </div>
       </div>

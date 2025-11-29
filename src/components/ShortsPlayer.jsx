@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaPlay, FaPause, FaHeart, FaRegHeart, FaComment, FaShare, FaEllipsisV, FaMusic } from 'react-icons/fa';
+import ScriptureModal from './ScriptureModal';
 import './ShortsPlayer.css';
 
 const ShortsPlayer = ({ videoData, isActive }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
   const [showVolumeIndicator, setShowVolumeIndicator] = useState(false);
+  const [showScriptureModal, setShowScriptureModal] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -24,6 +25,10 @@ const ShortsPlayer = ({ videoData, isActive }) => {
 
   const toggleLike = () => {
     setIsLiked(!isLiked);
+  };
+
+  const toggleScriptureModal = () => {
+    setShowScriptureModal(!showScriptureModal);
   };
 
   const formatNumber = (num) => {
@@ -49,7 +54,7 @@ const ShortsPlayer = ({ videoData, isActive }) => {
       {/* Play/Pause Overlay */}
       {!isPlaying && (
         <div className="play-overlay" onClick={togglePlayPause}>
-          <FaPlay className="play-icon" />
+          <span className="material-icons play-icon">play_arrow</span>
         </div>
       )}
 
@@ -60,21 +65,30 @@ const ShortsPlayer = ({ videoData, isActive }) => {
 
         <div className="action-item" onClick={toggleLike}>
           <div className="action-icon">
-            {isLiked ? <FaHeart className="liked" /> : <FaRegHeart />}
+            <span className={`material-icons ${isLiked ? 'liked' : ''}`}>
+              {isLiked ? 'favorite' : 'favorite_border'}
+            </span>
           </div>
           <span className="action-count">{formatNumber(videoData.likes + (isLiked ? 1 : 0))}</span>
         </div>
 
+        <div className="action-item" onClick={toggleScriptureModal}>
+          <div className="action-icon">
+            <span className="material-icons">library_books</span>
+          </div>
+          <span className="action-count">Scriptures</span>
+        </div>
+        
         <div className="action-item">
           <div className="action-icon">
-            <FaShare />
+            <span className="material-icons">share</span>
           </div>
           <span className="action-count">Share</span>
         </div>
 
         <div className="action-item">
           <div className="action-icon">
-            <FaEllipsisV />
+            <span className="material-icons">more_vert</span>
           </div>
         </div>
       </div>
@@ -82,12 +96,20 @@ const ShortsPlayer = ({ videoData, isActive }) => {
       {/* Bottom Info */}
       <div className="video-info">
         <div className="username-section">
-          <span className="username">@{videoData.username}</span>
+          <span className="username">{videoData.description}</span>
         </div>
         <div className="description">
-          {videoData.description}
+          {videoData.date}
         </div>
       </div>
+
+      {/* Scripture Modal */}
+      <ScriptureModal
+        isOpen={showScriptureModal}
+        onClose={toggleScriptureModal}
+        title={videoData.description}
+        content={videoData.moreInfo || 'No additional scripture information available.'}
+      />
     </div>
   );
 };
