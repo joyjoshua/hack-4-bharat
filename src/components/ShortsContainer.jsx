@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import ShortsPlayer from './ShortsPlayer';
+import RatingModal from './RatingModal';
 import './ShortsContainer.css';
 
 const ShortsContainer = ({ videos, initialIndex = 0 }) => {
@@ -8,12 +9,28 @@ const ShortsContainer = ({ videos, initialIndex = 0 }) => {
   const [touchEnd, setTouchEnd] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [containerHeight, setContainerHeight] = useState(0);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [hasShownRating, setHasShownRating] = useState(false);
   const containerRef = useRef(null);
 
   // Update current index when initialIndex changes
   useEffect(() => {
     setCurrentIndex(initialIndex);
   }, [initialIndex]);
+
+  // Show rating modal when user scrolls to video ID 3
+  useEffect(() => {
+    const currentVideo = videos[currentIndex];
+    if (currentVideo && currentVideo.id === 3 && !hasShownRating) {
+      // Small delay before showing modal
+      const timer = setTimeout(() => {
+        setShowRatingModal(true);
+        setHasShownRating(true);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, videos, hasShownRating]);
 
   const minSwipeDistance = 50;
 
@@ -27,6 +44,9 @@ const ShortsContainer = ({ videos, initialIndex = 0 }) => {
   };
 
   const onTouchEnd = () => {
+    // Disable swipe when rating modal is open
+    if (showRatingModal) return;
+    
     if (!touchStart || !touchEnd) return;
     
     const distance = touchStart - touchEnd;
@@ -47,6 +67,16 @@ const ShortsContainer = ({ videos, initialIndex = 0 }) => {
     setIsTransitioning(true);
     setCurrentIndex(index);
     setTimeout(() => setIsTransitioning(false), 300);
+  };
+
+  const handleRatingSubmit = (ratingValue) => {
+    console.log('User rated:', ratingValue);
+    // Store rating in sessionStorage
+    sessionStorage.setItem('video_3_rating', ratingValue);
+  };
+
+  const handleCloseRating = () => {
+    setShowRatingModal(false);
   };
 
   // Update container height on mount and resize
@@ -70,6 +100,9 @@ const ShortsContainer = ({ videos, initialIndex = 0 }) => {
   // Keyboard navigation for desktop testing
   useEffect(() => {
     const handleKeyPress = (e) => {
+      // Disable keyboard navigation when rating modal is open
+      if (showRatingModal) return;
+      
       if (e.key === 'ArrowUp' && currentIndex > 0) {
         navigateToVideo(currentIndex - 1);
       } else if (e.key === 'ArrowDown' && currentIndex < videos.length - 1) {
@@ -79,11 +112,12 @@ const ShortsContainer = ({ videos, initialIndex = 0 }) => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [currentIndex, videos.length]);
+  }, [currentIndex, videos.length, showRatingModal]);
 
   // Mouse wheel support for desktop
   const handleWheel = (e) => {
-    if (isTransitioning) return;
+    // Disable wheel navigation when rating modal is open
+    if (showRatingModal || isTransitioning) return;
     
     if (e.deltaY > 0 && currentIndex < videos.length - 1) {
       navigateToVideo(currentIndex + 1);
@@ -138,6 +172,13 @@ const ShortsContainer = ({ videos, initialIndex = 0 }) => {
           <div className="hint-arrow">↓</div>
         </div>
       )}
+
+      {/* Rating Modal */}
+      <RatingModal
+        isOpen={showRatingModal}
+        onClose={handleCloseRating}
+        onSubmit={handleRatingSubmit}
+      />
     </div>
   );
 };
