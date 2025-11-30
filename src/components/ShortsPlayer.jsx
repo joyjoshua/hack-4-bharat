@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import ScriptureModal from './ScriptureModal';
+import { useLikes } from '../hooks/useLikes';
 import './ShortsPlayer.css';
 
 const ShortsPlayer = ({ videoData, isActive }) => {
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isLiked, setIsLiked] = useState(false);
   const [showVolumeIndicator, setShowVolumeIndicator] = useState(false);
   const [showScriptureModal, setShowScriptureModal] = useState(false);
   const videoRef = useRef(null);
+  const { isLiked: checkIsLiked, toggleLike } = useLikes();
+  const isLiked = checkIsLiked(videoData.id);
 
   // Handle video playback based on active state and play/pause state
   useEffect(() => {
@@ -56,8 +58,8 @@ const ShortsPlayer = ({ videoData, isActive }) => {
     setIsPlaying(!isPlaying);
   };
 
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
+  const handleToggleLike = () => {
+    toggleLike(videoData.id);
   };
 
   const toggleScriptureModal = () => {
@@ -99,7 +101,7 @@ const ShortsPlayer = ({ videoData, isActive }) => {
         <div className="action-item">
         </div>
 
-        <div className="action-item" onClick={toggleLike}>
+        <div className="action-item" onClick={handleToggleLike}>
           <div className="action-icon">
             <span className={`material-icons ${isLiked ? 'liked' : ''}`}>
               {isLiked ? 'favorite' : 'favorite_border'}

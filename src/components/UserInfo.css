@@ -298,6 +298,24 @@
   font-size: 14px;
 }
 
+.liked-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 0, 51, 0.9);
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.liked-badge .material-icons {
+  font-size: 16px;
+  color: white;
+}
+
 .empty-state {
   grid-column: 1 / -1;
   padding: 60px 20px;

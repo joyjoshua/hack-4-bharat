@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './UserInfo.css';
 import { mockVideos } from '../data/mockVideos';
+import { useLikes } from '../hooks/useLikes';
 
 // Import thumbnail images
 import thumb1 from '../assets/images/Rectangle.png';
@@ -18,12 +19,27 @@ import thumb12 from '../assets/images/Rectangle-11.png';
 
 const UserInfo = ({ onClose, onVideoSelect }) => {
   const [activeTab, setActiveTab] = useState('videos');
+  const { likedVideos, getLikedCount } = useLikes();
+  const [, forceUpdate] = useState(0);
+
+  // Listen for likes updates from other components
+  useEffect(() => {
+    const handleLikesUpdate = () => {
+      forceUpdate(prev => prev + 1);
+    };
+
+    window.addEventListener('likesUpdated', handleLikesUpdate);
+    return () => window.removeEventListener('likesUpdated', handleLikesUpdate);
+  }, []);
 
   const handleVideoClick = (index) => {
     if (onVideoSelect) {
       onVideoSelect(index);
     }
   };
+
+  // Get liked videos
+  const likedVideosList = mockVideos.filter(video => likedVideos.includes(video.id));
   
   const thumbnailImages = [
     thumb1, thumb2, thumb3, thumb4, thumb5, thumb6,
@@ -97,10 +113,43 @@ const UserInfo = ({ onClose, onVideoSelect }) => {
             </>
           )}
           {activeTab === 'liked' && (
-            <div className="empty-state">
-              <span className="material-icons empty-icon">favorite_border</span>
-              <p>Your liked videos will appear here</p>
-            </div>
+            <>
+              {likedVideosList.length > 0 ? (
+                <>
+                  {likedVideosList.map((video) => {
+                    const videoIndex = mockVideos.findIndex(v => v.id === video.id);
+                    return (
+                      <div 
+                        key={video.id} 
+                        className="grid-item"
+                        onClick={() => handleVideoClick(videoIndex)}
+                      >
+                        <div className="grid-thumbnail">
+                          <img 
+                            src={getRandomThumbnail(videoIndex)} 
+                            alt={video.description}
+                            className="thumbnail-image"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <div className="view-count">
+                            <span className="material-icons">visibility</span> {formatNumber(video.likes)}
+                          </div>
+                          <div className="liked-badge">
+                            <span className="material-icons">favorite</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
+              ) : (
+                <div className="empty-state">
+                  <span className="material-icons empty-icon">favorite_border</span>
+                  <p>Your liked videos will appear here</p>
+                </div>
+              )}
+            </>
           )}
         </div>
 
