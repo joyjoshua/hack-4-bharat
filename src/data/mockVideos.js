@@ -4,6 +4,7 @@ import video1 from '../assets/videos/1.mp4';
 import video2 from '../assets/videos/2.mp4';
 import video3 from '../assets/videos/3.mp4';
 import video4 from '../assets/videos/4.mp4';
+import video5 from '../assets/videos/5.mp4';
 
 export const mockVideos = [
   {
@@ -56,6 +57,18 @@ export const mockVideos = [
   },
   {
     id: 5,
+    videoUrl: video5,
+    username: 'nature_explorer',
+    avatar: 'https://i.pravatar.cc/150?img=1',
+    description: `A king's choice sparks outrage among powerful rulers!`,
+    moreInfo: `A king's choice sparks outrage among powerful rulers! In the grand arena, the king announced his daughter's marriage. He chose a Brahmana, not a king. The assembled kings were furious. "He treats us like straw!" they exclaimed. Anger filled the air, tension crackled like lightning. "Let's kill him!" they shouted, their pride wounded. The king stood firm, his heart unwavering. "Droupadi deserves the best," he said, defying tradition. In that moment, love challenged power. A father's courage against a sea of royal fury. Sometimes, the heart knows what the world cannot see. Want more Mahabharata stories? Follow for daily wisdom.`,
+    likes: 125400,
+    comments: 3421,
+    shares: 892,
+    date: 'Nov 30, 2025'
+  },
+  {
+    id: 6,
     videoUrl: video2,
     username: 'creative_mind',
     avatar: 'https://i.pravatar.cc/150?img=2',
@@ -67,7 +80,7 @@ export const mockVideos = [
     date: 'Nov 30, 2025'
   },
   {
-    id: 6,
+    id: 7,
     videoUrl: video3,
     username: 'fitness_guru',
     avatar: 'https://i.pravatar.cc/150?img=3',
