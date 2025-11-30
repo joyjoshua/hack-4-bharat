@@ -11,6 +11,8 @@
   z-index: 1000;
   padding: 20px;
   animation: fadeIn 0.3s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes fadeIn {
@@ -91,7 +93,10 @@
 .scripture-modal-body {
   padding: 20px;
   overflow-y: auto;
+  overflow-x: hidden;
   flex: 1;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .scripture-modal-body::-webkit-scrollbar {

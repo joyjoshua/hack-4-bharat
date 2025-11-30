@@ -5,7 +5,7 @@ import './ShortsPlayer.css';
 
 const ShortsPlayer = ({ videoData, isActive }) => {
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true); // Start muted for Chrome autoplay
+  const [isMuted, setIsMuted] = useState(false); // Start unmuted - user can mute later
   const [showVolumeIndicator, setShowVolumeIndicator] = useState(false);
   const [showScriptureModal, setShowScriptureModal] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -59,13 +59,6 @@ const ShortsPlayer = ({ videoData, isActive }) => {
     setIsPlaying(!isPlaying);
     if (!hasInteracted) {
       setHasInteracted(true);
-      // Unmute on first user interaction
-      if (isMuted) {
-        setIsMuted(false);
-        if (videoRef.current) {
-          videoRef.current.muted = false;
-        }
-      }
     }
   };
 
