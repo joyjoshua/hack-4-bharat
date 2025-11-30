@@ -5,8 +5,10 @@ import './ShortsPlayer.css';
 
 const ShortsPlayer = ({ videoData, isActive }) => {
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true); // Start muted for Chrome autoplay
   const [showVolumeIndicator, setShowVolumeIndicator] = useState(false);
   const [showScriptureModal, setShowScriptureModal] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const videoRef = useRef(null);
   const { isLiked: checkIsLiked, toggleLike } = useLikes();
   const isLiked = checkIsLiked(videoData.id);
@@ -18,22 +20,21 @@ const ShortsPlayer = ({ videoData, isActive }) => {
 
     const attemptPlay = async () => {
       try {
-        // Ensure volume is on
         video.volume = 1.0;
-        video.muted = false;
+        video.muted = isMuted;
         await video.play();
+        
+        // If user has interacted and we're muted, try to unmute
+        if (!isMuted && hasInteracted) {
+          video.muted = false;
+        }
       } catch (error) {
-        // If unmuted autoplay fails, try muted
-        console.log('Autoplay blocked, trying muted:', error);
+        console.log('Autoplay failed:', error);
+        // Try with muted as fallback
         try {
           video.muted = true;
+          setIsMuted(true);
           await video.play();
-          // Unmute after a brief moment
-          setTimeout(() => {
-            if (video) {
-              video.muted = false;
-            }
-          }, 100);
         } catch (mutedError) {
           console.log('Muted autoplay also failed:', mutedError);
           setIsPlaying(false);
@@ -52,10 +53,29 @@ const ShortsPlayer = ({ videoData, isActive }) => {
       video.pause();
       video.currentTime = 0;
     }
-  }, [isActive, isPlaying]);
+  }, [isActive, isPlaying, isMuted, hasInteracted]);
 
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying);
+    if (!hasInteracted) {
+      setHasInteracted(true);
+      // Unmute on first user interaction
+      if (isMuted) {
+        setIsMuted(false);
+        if (videoRef.current) {
+          videoRef.current.muted = false;
+        }
+      }
+    }
+  };
+
+  const toggleMute = (e) => {
+    e.stopPropagation(); // Prevent play/pause toggle
+    setHasInteracted(true);
+    setIsMuted(!isMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+    }
   };
 
   const handleToggleLike = () => {
@@ -83,10 +103,10 @@ const ShortsPlayer = ({ videoData, isActive }) => {
         src={videoData.videoUrl}
         loop
         playsInline
+        muted={isMuted}
         preload="auto"
         onClick={togglePlayPause}
         webkit-playsinline="true"
-        autoPlay={isActive}
       />
 
       {/* Play/Pause Overlay */}
@@ -127,6 +147,15 @@ const ShortsPlayer = ({ videoData, isActive }) => {
         <div className="action-item">
           <div className="action-icon">
             <span className="material-icons">more_vert</span>
+          </div>
+        </div>
+
+        {/* Mute/Unmute Button - Subtle */}
+        <div className="action-item mute-action" onClick={toggleMute}>
+          <div className="action-icon mute-icon">
+            <span className="material-icons">
+              {isMuted ? 'volume_off' : 'volume_up'}
+            </span>
           </div>
         </div>
       </div>

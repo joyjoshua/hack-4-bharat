@@ -31,11 +31,13 @@ function App() {
       <header className="app-header">
         <div className="header-content">
           <h1 className="app-title">Kirāṭa</h1>
-          <div className="header-icons">
-            <button className="header-btn" onClick={toggleUserInfo}>
-              <span className="material-icons">person</span>
-            </button>
-          </div>
+          {!showUserInfo && (
+            <div className="header-icons">
+              <button className="header-btn" onClick={toggleUserInfo}>
+                <span className="material-icons">person</span>
+              </button>
+            </div>
+          )}
         </div>
       </header>
       {showUserInfo ? (

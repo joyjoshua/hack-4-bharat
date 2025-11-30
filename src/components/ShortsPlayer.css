@@ -43,6 +43,7 @@
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
 }
 
+
 /* Right Side Actions */
 .action-buttons {
   position: absolute;
@@ -146,6 +147,32 @@
 @keyframes rotate {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* Subtle Mute Button */
+.mute-action {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.mute-action:hover {
+  opacity: 1;
+}
+
+.mute-action .mute-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.mute-action .mute-icon .material-icons {
+  font-size: 24px;
+}
+
+/* Smaller icons for secondary actions */
+.action-buttons .action-item:nth-child(3) .action-icon .material-icons,
+.action-buttons .action-item:nth-child(4) .action-icon .material-icons,
+.action-buttons .action-item:nth-child(5) .action-icon .material-icons {
+  font-size: 30px;
 }
 
 /* Bottom Info */
