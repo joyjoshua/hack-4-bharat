@@ -9,13 +9,46 @@ const ShortsPlayer = ({ videoData, isActive }) => {
   const [showScriptureModal, setShowScriptureModal] = useState(false);
   const videoRef = useRef(null);
 
+  // Handle video playback based on active state and play/pause state
   useEffect(() => {
-    if (videoRef.current) {
-      if (isActive && isPlaying) {
-        videoRef.current.play();
-      } else {
-        videoRef.current.pause();
+    const video = videoRef.current;
+    if (!video) return;
+
+    const attemptPlay = async () => {
+      try {
+        // Ensure volume is on
+        video.volume = 1.0;
+        video.muted = false;
+        await video.play();
+      } catch (error) {
+        // If unmuted autoplay fails, try muted
+        console.log('Autoplay blocked, trying muted:', error);
+        try {
+          video.muted = true;
+          await video.play();
+          // Unmute after a brief moment
+          setTimeout(() => {
+            if (video) {
+              video.muted = false;
+            }
+          }, 100);
+        } catch (mutedError) {
+          console.log('Muted autoplay also failed:', mutedError);
+          setIsPlaying(false);
+        }
       }
+    };
+
+    if (isActive) {
+      if (isPlaying) {
+        attemptPlay();
+      } else {
+        video.pause();
+      }
+    } else {
+      // Pause and reset non-active videos
+      video.pause();
+      video.currentTime = 0;
     }
   }, [isActive, isPlaying]);
 
@@ -48,7 +81,10 @@ const ShortsPlayer = ({ videoData, isActive }) => {
         src={videoData.videoUrl}
         loop
         playsInline
+        preload="auto"
         onClick={togglePlayPause}
+        webkit-playsinline="true"
+        autoPlay={isActive}
       />
 
       {/* Play/Pause Overlay */}
