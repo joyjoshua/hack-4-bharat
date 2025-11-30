@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './UserInfo.css';
+import { mockVideos } from '../data/mockVideos';
 
 // Import thumbnail images
 import thumb1 from '../assets/images/Rectangle.png';
@@ -15,13 +16,26 @@ import thumb10 from '../assets/images/Rectangle-9.png';
 import thumb11 from '../assets/images/Rectangle-10.png';
 import thumb12 from '../assets/images/Rectangle-11.png';
 
-const UserInfo = ({ onClose }) => {
+const UserInfo = ({ onClose, onVideoSelect }) => {
   const [activeTab, setActiveTab] = useState('videos');
+
+  const handleVideoClick = (index) => {
+    if (onVideoSelect) {
+      onVideoSelect(index);
+    }
+  };
   
   const thumbnailImages = [
     thumb1, thumb2, thumb3, thumb4, thumb5, thumb6,
     thumb7, thumb8, thumb9, thumb10, thumb11, thumb12
   ];
+
+  // Get random thumbnail for each video, cycling through available thumbnails
+  const getRandomThumbnail = (index) => {
+    // Use modulo to cycle through thumbnails if more videos than thumbnails
+    const thumbnailIndex = index % thumbnailImages.length;
+    return thumbnailImages[thumbnailIndex];
+  };
   
   const formatNumber = (num) => {
     if (num >= 1000000) {
@@ -60,18 +74,22 @@ const UserInfo = ({ onClose }) => {
         <div className="content-grid">
           {activeTab === 'videos' && (
             <>
-              {[...Array(12)].map((_, index) => (
-                <div key={index} className="grid-item">
+              {mockVideos.map((video, index) => (
+                <div 
+                  key={video.id} 
+                  className="grid-item"
+                  onClick={() => handleVideoClick(index)}
+                >
                   <div className="grid-thumbnail">
                     <img 
-                      src={thumbnailImages[index]} 
-                      alt={`Video ${index + 1}`}
+                      src={getRandomThumbnail(index)} 
+                      alt={video.description}
                       className="thumbnail-image"
                       loading="lazy"
                       decoding="async"
                     />
                     <div className="view-count">
-                      <span className="material-icons">visibility</span> {formatNumber(Math.floor(Math.random() * 500000) + 10000)}
+                      <span className="material-icons">visibility</span> {formatNumber(video.likes)}
                     </div>
                   </div>
                 </div>

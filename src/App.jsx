@@ -6,6 +6,7 @@ import './App.css';
 
 function App() {
   const [showUserInfo, setShowUserInfo] = useState(false);
+  const [initialVideoIndex, setInitialVideoIndex] = useState(0);
 
   useEffect(() => {
     // Prevent pull-to-refresh on mobile
@@ -18,6 +19,11 @@ function App() {
 
   const toggleUserInfo = () => {
     setShowUserInfo(!showUserInfo);
+  };
+
+  const handleVideoSelect = (videoIndex) => {
+    setInitialVideoIndex(videoIndex);
+    setShowUserInfo(false);
   };
 
   return (
@@ -33,9 +39,9 @@ function App() {
         </div>
       </header>
       {showUserInfo ? (
-        <UserInfo onClose={toggleUserInfo} />
+        <UserInfo onClose={toggleUserInfo} onVideoSelect={handleVideoSelect} />
       ) : (
-        <ShortsContainer videos={mockVideos} />
+        <ShortsContainer videos={mockVideos} initialIndex={initialVideoIndex} />
       )}
     </div>
   );

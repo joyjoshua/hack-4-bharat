@@ -2,13 +2,18 @@ import { useState, useRef, useEffect } from 'react';
 import ShortsPlayer from './ShortsPlayer';
 import './ShortsContainer.css';
 
-const ShortsContainer = ({ videos }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const ShortsContainer = ({ videos, initialIndex = 0 }) => {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [containerHeight, setContainerHeight] = useState(0);
   const containerRef = useRef(null);
+
+  // Update current index when initialIndex changes
+  useEffect(() => {
+    setCurrentIndex(initialIndex);
+  }, [initialIndex]);
 
   const minSwipeDistance = 50;
 
