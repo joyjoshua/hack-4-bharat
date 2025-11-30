@@ -12,16 +12,22 @@ const ShortsContainer = ({ videos, initialIndex = 0 }) => {
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [hasShownRating, setHasShownRating] = useState(false);
   const containerRef = useRef(null);
+  const previousIndexRef = useRef(initialIndex);
 
   // Update current index when initialIndex changes
   useEffect(() => {
     setCurrentIndex(initialIndex);
   }, [initialIndex]);
 
-  // Show rating modal when user scrolls to video ID 3
+  // Show rating modal when user scrolls AWAY FROM video ID 3
   useEffect(() => {
+    const previousVideo = videos[previousIndexRef.current];
     const currentVideo = videos[currentIndex];
-    if (currentVideo && currentVideo.id === 3 && !hasShownRating) {
+    
+    // Check if user just left video ID 3
+    if (previousVideo && previousVideo.id === 3 && 
+        currentVideo && currentVideo.id !== 3 && 
+        !hasShownRating) {
       // Small delay before showing modal
       const timer = setTimeout(() => {
         setShowRatingModal(true);
@@ -30,6 +36,9 @@ const ShortsContainer = ({ videos, initialIndex = 0 }) => {
       
       return () => clearTimeout(timer);
     }
+    
+    // Update previous index for next comparison
+    previousIndexRef.current = currentIndex;
   }, [currentIndex, videos, hasShownRating]);
 
   const minSwipeDistance = 50;
@@ -147,6 +156,7 @@ const ShortsContainer = ({ videos, initialIndex = 0 }) => {
             key={video.id}
             videoData={video}
             isActive={index === currentIndex}
+            isModalOpen={showRatingModal}
           />
         ))}
       </div>

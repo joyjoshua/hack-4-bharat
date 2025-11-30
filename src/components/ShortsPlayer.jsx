@@ -3,20 +3,49 @@ import ScriptureModal from './ScriptureModal';
 import { useLikes } from '../hooks/useLikes';
 import './ShortsPlayer.css';
 
-const ShortsPlayer = ({ videoData, isActive }) => {
+const ShortsPlayer = ({ videoData, isActive, isModalOpen = false }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false); // Start unmuted - user can mute later
   const [showVolumeIndicator, setShowVolumeIndicator] = useState(false);
   const [showScriptureModal, setShowScriptureModal] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [wasPlayingBeforeModal, setWasPlayingBeforeModal] = useState(true);
   const videoRef = useRef(null);
   const { isLiked: checkIsLiked, toggleLike } = useLikes();
   const isLiked = checkIsLiked(videoData.id);
+
+  // Handle pausing when rating modal appears
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isModalOpen && isActive) {
+      // Save playing state before pausing for modal
+      setWasPlayingBeforeModal(isPlaying);
+      if (!video.paused) {
+        video.pause();
+      }
+    } else if (!isModalOpen && isActive && wasPlayingBeforeModal) {
+      // Resume video after modal closes
+      const attemptResume = async () => {
+        try {
+          video.muted = isMuted;
+          await video.play();
+        } catch (error) {
+          console.log('Resume failed:', error);
+        }
+      };
+      attemptResume();
+    }
+  }, [isModalOpen, isActive, wasPlayingBeforeModal, isMuted, isPlaying]);
 
   // Handle video playback based on active state and play/pause state
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    // Don't auto-play if modal is open
+    if (isModalOpen) return;
 
     const attemptPlay = async () => {
       try {
@@ -53,7 +82,7 @@ const ShortsPlayer = ({ videoData, isActive }) => {
       video.pause();
       video.currentTime = 0;
     }
-  }, [isActive, isPlaying, isMuted, hasInteracted]);
+  }, [isActive, isPlaying, isMuted, hasInteracted, isModalOpen]);
 
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying);

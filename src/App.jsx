@@ -30,7 +30,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <h1 className="app-title">Kirāṭa</h1>
+          <h1 className="app-title">Khata</h1>
           {!showUserInfo && (
             <div className="header-icons">
               <button className="header-btn" onClick={toggleUserInfo}>
